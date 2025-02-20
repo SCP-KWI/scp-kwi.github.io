@@ -6,6 +6,18 @@
   display: none !important;
 }
 
+.d-none {
+  display: none !important;
+}
+
+.mugshot {
+  max-width: 200%;
+  max-height: 200%;
+  width: auto;
+  height: auto;
+  display: none; /* Ensure mugshots are hidden initially */
+}
+
 .image-container {
   display: inline-block;
   margin: 10px;

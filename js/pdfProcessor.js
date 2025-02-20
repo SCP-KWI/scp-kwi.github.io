@@ -82,6 +82,7 @@ export const processPDF = async (pdfFile) => {
           const imgElement = document.createElement('img');
           imgElement.src = mugshotImage;
           imgElement.classList.add('mugshot');
+          imgElement.style.display = 'none'; // Ensure mugshots are hidden initially
           document.body.appendChild(imgElement);
         } else {
           console.log(`Skipping white image at col ${col}, row ${row}`);
