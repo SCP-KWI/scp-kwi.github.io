@@ -5,24 +5,28 @@ window.showMainScreen = function () {
   document.getElementById("scan-class-screen").classList.add("d-none");
   document.getElementById("train-class-screen").classList.add("d-none");
   document.getElementById("quiz-screen").classList.add("d-none");
+  document.getElementById("quiz-screen").style.display = "none";
 };
 
 window.showScanClassScreen = function () {
   document.getElementById("scan-class-screen").classList.remove("d-none");
   document.getElementById("train-class-screen").classList.add("d-none");
   document.getElementById("quiz-screen").classList.add("d-none");
+  document.getElementById("quiz-screen").style.display = "none";
 };
 
 window.showTrainClassScreen = function () {
   document.getElementById("scan-class-screen").classList.add("d-none");
   document.getElementById("train-class-screen").classList.remove("d-none");
   document.getElementById("quiz-screen").classList.add("d-none");
+  document.getElementById("quiz-screen").style.display = "none";
 };
 
 window.startQuiz = function () {
   document.getElementById("scan-class-screen").classList.add("d-none");
   document.getElementById("train-class-screen").classList.add("d-none");
   document.getElementById("quiz-screen").classList.remove("d-none");
+  document.getElementById("quiz-screen").style.display = "flex";
   loadRandomImage();
 };
 

@@ -77,6 +77,12 @@ export const processPDF = async (pdfFile) => {
           const imageName = `${name}.png`;
           console.log(`Saving mugshot ${imageName}`);
           saveImage(mugshotImage, imageName);
+
+          // Apply the class to the mugshot image element
+          const imgElement = document.createElement('img');
+          imgElement.src = mugshotImage;
+          imgElement.classList.add('mugshot');
+          document.body.appendChild(imgElement);
         } else {
           console.log(`Skipping white image at col ${col}, row ${row}`);
         }
