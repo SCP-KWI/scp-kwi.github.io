@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Trainer App</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">Schüler:innen Bildli Trainer</h1>
+        <div id="scan-class-screen">
+            <h2>Klasse Scannen</h2>
+            <input type="file" id="pdf-file" accept="application/pdf" class="form-control my-2">
+            <button class="btn btn-primary" onclick="processPDF()">PDF einlesen</button>
+        </div>
+        <div id="train-class-screen" class="d-none">
+            <h2>Train Class</h2>
+            <button class="btn btn-primary" onclick="startQuiz()">Quiz starten</button>
+            <button class="btn btn-secondary" onclick="showScanClassScreen()">Zurück</button>
+        </div>
+        <div id="quiz-screen" class="d-none">
+            <h2>Quiz</h2>
+            <div id="quiz-image-container"></div>
+            <input type="text" id="quiz-input" class="form-control my-2" placeholder="Enter first name" onkeypress="handleKeyPress(event)">
+            <button class="btn btn-primary" id="ok-button" onclick="checkAnswer()">Ok</button>
+            <p id="quiz-message"></p>
+            <p id="correct-name"></p>
+            <button class="btn btn-secondary d-none" id="next-button" onclick="loadRandomImage()">Weiter</button>
+            <p id="score" class="text-right"></p>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

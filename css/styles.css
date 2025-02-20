@@ -1,0 +1,41 @@
+.d-none {
+  display: none;
+}
+
+.image-container {
+  display: inline-block;
+  margin: 10px;
+  text-align: center;
+}
+
+.saved-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.image-name {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #333;
+}
+
+.quiz-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.text-danger {
+  color: red;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.congrats-gif {
+  max-width: 100%;
+  height: auto;
+  margin: 20px 0;
+}
