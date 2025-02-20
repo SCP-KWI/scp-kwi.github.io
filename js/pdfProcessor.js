@@ -38,8 +38,8 @@ export const processPDF = async (pdfFile) => {
 
     let stopProcessing = false;
 
-    for (let col = 0; col < 4 && !stopProcessing; col++) {
-      for (let row = 0; row < 6 && !stopProcessing; row++) {
+    for (let col = 0; col < 4; col++) {
+      for (let row = 0; row < 6; row++) {
         const x =
           leftMargin +
           col * mugshotWidth +
@@ -79,7 +79,6 @@ export const processPDF = async (pdfFile) => {
           saveImage(mugshotImage, imageName);
         } else {
           console.log(`Skipping white image at col ${col}, row ${row}`);
-          stopProcessing = true;
         }
       }
     }

@@ -6,6 +6,28 @@
     <title>Student Trainer App</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        #quiz-image-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #quiz-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -20,7 +42,7 @@
             <button class="btn btn-primary" onclick="startQuiz()">Quiz starten</button>
             <button class="btn btn-secondary" onclick="showScanClassScreen()">Zurück</button>
         </div>
-        <div id="quiz-screen" class="d-none">
+        <div id="quiz-screen" class="d-none d-flex flex-column">
             <h2>Quiz</h2>
             <div id="quiz-image-container"></div>
             <input type="text" id="quiz-input" class="form-control my-2" placeholder="Enter first name" onkeypress="handleKeyPress(event)">
