@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmier-Quiz: Zurück zur Schule!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "🌴☀️🏖️";
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            font-size: 40px;
+            opacity: 0.3;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        h1 {
+            color: #764ba2;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .room {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .room.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .room-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .room-header h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .story {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .question {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #ffc107;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .input-group {
+            margin-top: 20px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+            display: block;
+        }
+
+        .progress {
+            background: #e9ecef;
+            border-radius: 20px;
+            height: 30px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #56ab2f 0%, #a8e063 100%);
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .final-screen {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .final-screen h2 {
+            color: #28a745;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .trophy {
+            font-size: 100px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .hint-btn {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .hint {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎒 Programmier-Quiz: Zurück zur Schule! 🎒</h1>
+        <p class="subtitle">Nutze deine Programmierkenntnisse, um aus den Sommerferien zu entkommen!</p>
+        
+        <div class="progress">
+            <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+
+        <!-- Raum 1: Sequenz -->
+        <div class="room active" id="room1">
+            <div class="room-header">
+                <h2>📚 Frage 1: Willkommensnachricht</h2>
+                <p>Thema: Sequenz</p>
+            </div>
+            
+            <div class="story">
+                Nach 5 Wochen Sommerferien betrittst du das Klassenzimmer. Die digitale Anzeigetafel soll 
+                eine Willkommensnachricht zeigen, aber die Programmzeilen sind völlig durcheinander geraten!
+            </div>
+
+            <div class="question">
+                <p><strong>Diese Zeilen Code sind durcheinander:</strong></p>
+                <div class="code-block">
+1. print("Willkommen zurück,", name)
+2. ferientage = 36
+3. print("Nach", ferientage, "Tagen Ferien geht's wieder los!")
+4. name = input()
+                </div>
+                <p><strong>Das Programm soll ausgeben:</strong></p>
+                <div class="code-block">
+Willkommen zurück, Klasse 4f
+Nach 36 Tagen Ferien geht's wieder los!
+                </div>
+                <p><strong>Welche der untenstehenden Reihenfolgen für die Zeilen würde ein funktionierendes Programm ergeben??</strong></p>
+            </div>
+
+            <div class="options">
+                <button class="option-btn" onclick="checkAnswer(1, 'A')">A) 3, 4, 1, 2</button>
+                <button class="option-btn" onclick="checkAnswer(1, 'B')">B) 1, 2, 3, 4</button>
+                <button class="option-btn" onclick="checkAnswer(1, 'C')">C) 4, 1, 2, 3</button>
+                <button class="option-btn" onclick="checkAnswer(1, 'D')">D) 1, 4, 2, 3</button>
+            </div>
+
+            <button class="hint-btn" onclick="showHint(1)">💡 Tipp anzeigen</button>
+            <div class="hint" id="hint1">
+                Denk daran: Variablen müssen definiert werden, BEVOR sie verwendet werden! 
+                Welche Variablen werden in den print-Befehlen benutzt?
+            </div>
+
+            <div class="feedback" id="feedback1"></div>
+        </div>
+
+        <!-- Raum 2: Variablen -->
+        <div class="room" id="room2">
+            <div class="room-header">
+                <h2>🏖️ Frage 2: Die Urlaubskasse</h2>
+                <p>Thema: Variablen</p>
+            </div>
+            
+            <div class="story">
+                Du hast in den Ferien fleissig Glacé verkauft! Jetzt musst du ausrechnen, wie viel Geld du 
+                verdient hast. Aber Vorsicht - die Variablen haben sich verändert (und eine Variable wird nicht gebraucht)!
+            </div>
+
+            <div class="question">
+                <p><strong>Dein Glacé Programm:</strong></p>
+                <div class="code-block">
+glace_preis = 2
+anzahl_montag = 15
+anzahl_dienstag = 20
+anzahl_mittwoch = anzahl_montag + 5
+
+# Am Donnerstag war es so heiss, dass du doppelt so viel 
+# wie am Dienstag verkauft hast!
+anzahl_donnerstag = anzahl_dienstag * 2
+
+gesamt_verkauft = anzahl_montag + anzahl_dienstag + anzahl_mittwoch + anzahl_donnerstag
+                </div>
+                <p><strong>Wie viele Glacé hast du insgesamt verkauft?</strong></p>
+            </div>
+
+            <div class="input-group">
+                <input type="number" id="room2Answer" placeholder="Gib die Anzahl ein...">
+                <button class="submit-btn" onclick="checkAnswer(2, document.getElementById('room2Answer').value)">
+                    Antwort prüfen
+                </button>
+            </div>
+
+            <button class="hint-btn" onclick="showHint(2)">💡 Tipp anzeigen</button>
+            <div class="hint" id="hint2">
+                Arbeite Schritt für Schritt: Montag=15, Dienstag=20, Mittwoch=15+5=20, Donnerstag=20*2=40. 
+                Jetzt alle zusammenzählen!
+            </div>
+
+            <div class="feedback" id="feedback2"></div>
+        </div>
+
+        <!-- Raum 3: Selektion (if-else) -->
+        <div class="room" id="room3">
+            <div class="room-header">
+                <h2>☀️ Frage 3: Der Sonnencreme-Automat</h2>
+                <p>Thema: Selektion (if-else)</p>
+            </div>
+            
+            <div class="story">
+                Der Schul-Sonnencreme-Automat (ja, den gibt's wirklich... in deiner Fantasie!) 
+                muss entscheiden, welche Sonnencreme er ausgeben soll.
+            </div>
+
+            <div class="question">
+                <p><strong>Der Code des Automaten:</strong></p>
+                <div class="code-block">
+temperatur = 28
+
+if temperatur > 25:
+    sonnencreme = "LSF 50"
+else:
+    sonnencreme = "LSF 30"
+
+print(sonnencreme)
+                </div>
+                <p><strong>Was wird ausgegeben?</strong></p>
+            </div>
+
+            <div class="options">
+                <button class="option-btn" onclick="checkAnswer(3, 'A')">A) LSF 30</button>
+                <button class="option-btn" onclick="checkAnswer(3, 'B')">B) LSF 50</button>
+                <button class="option-btn" onclick="checkAnswer(3, 'C')">C) Keine Ausgabe</button>
+            </div>
+
+            <button class="hint-btn" onclick="showHint(3)">💡 Tipp anzeigen</button>
+            <div class="hint" id="hint3">
+                Prüfe die Bedingungen der Reihe nach: Ist 28 > 25? JA! 
+                Also...?
+            </div>
+
+            <div class="feedback" id="feedback3"></div>
+        </div>
+
+        <!-- Raum 4: Variablen und Sequenz -->
+        <div class="room" id="room4">
+            <div class="room-header">
+                <h2>🎮 Frage 4: Das Ferienpunkte-System</h2>
+                <p>Thema: Variablen und Sequenz</p>
+            </div>
+            
+            <div class="story">
+                Deine Eltern haben ein Punktesystem eingeführt: Für jede sinnvolle Aktivität in den 
+                Ferien gab es Punkte. Mal sehen, wie viele Punkte du gesammelt hast mit 3 Tagen ohne Social Media, 2 gelesenen Büchern und 3 mal Sport!
+            </div>
+
+            <div class="question">
+                <p><strong>Das Punkte-Programm:</strong></p>
+                <div class="code-block">
+punkte = 0
+punkte = punkte + 10 * int(input())  # Ein Tag ohne Social Media
+punkte = punkte + 15 * int(input())  # Bücher gelesen
+punkte = punkte + 20 * int(input())  # Sport gemacht
+
+# Bonus für extra Hilfe im Haushalt
+bonus = 5
+punkte = punkte + bonus
+                </div>
+                <p><strong>Wie viele Punkte hast du am Ende?</strong></p>
+            </div>
+
+            <div class="input-group">
+                <input type="number" id="room4Answer" placeholder="Gib die Punktzahl ein...">
+                <button class="submit-btn" onclick="checkAnswer(4, document.getElementById('room4Answer').value)">
+                    Antwort prüfen
+                </button>
+            </div>
+
+            <button class="hint-btn" onclick="showHint(4)">💡 Tipp anzeigen</button>
+            <div class="hint" id="hint4">
+                Folge der Sequenz: 0 + 3*10 = 30, dann + 2*15 = 60, .... 
+            </div>
+
+            <div class="feedback" id="feedback4"></div>
+        </div>
+
+        <!-- Raum 5: Komplexe Selektion -->
+        <div class="room" id="room5">
+            <div class="room-header">
+                <h2>🚌 Frage 5: Der Schulbus-Check</h2>
+                <p>Thema: Verschachtelte Selektion</p>
+            </div>
+            
+            <div class="story">
+                Der erste Schultag! Der digitale Schulbus-Assistent muss entscheiden, ob du 
+                rechtzeitig zur Schule kommst.
+            </div>
+
+            <div class="question">
+                <p><strong>Der Entscheidungs-Code:</strong></p>
+                <div class="code-block">
+uhrzeit = 7
+wecker_geklingelt = True
+fruehstueck_gegessen = False
+
+if wecker_geklingelt:
+    if uhrzeit < 8:
+        if fruehstueck_gegessen:
+            status = "Perfekt vorbereitet!"
+        else:
+            status = "Schnell noch was essen!"
+    else:
+        status = "Beeil dich!"
+else:
+    status = "VERSCHLAFEN!"
+
+print(status)
+                </div>
+                <p><strong>Was wird ausgegeben?</strong></p>
+            </div>
+
+            <div class="options">
+                <button class="option-btn" onclick="checkAnswer(5, 'A')">A) Perfekt vorbereitet!</button>
+                <button class="option-btn" onclick="checkAnswer(5, 'B')">B) Schnell noch was essen!</button>
+                <button class="option-btn" onclick="checkAnswer(5, 'C')">C) Beeil dich!</button>
+                <button class="option-btn" onclick="checkAnswer(5, 'D')">D) VERSCHLAFEN!</button>
+            </div>
+
+            <button class="hint-btn" onclick="showHint(5)">💡 Tipp anzeigen</button>
+            <div class="hint" id="hint5">
+                Arbeite dich durch die if-Bedingungen: wecker_geklingelt = True ✓, 
+                7 < 8 = True ✓, fruehstueck_gegessen = False ✗
+            </div>
+
+            <div class="feedback" id="feedback5"></div>
+        </div>
+
+        <!-- Erfolgsbildschirm -->
+        <div class="room" id="finalRoom">
+            <div class="final-screen">
+                <div class="trophy">🏆</div>
+                <h2>Geschafft!</h2>
+                <p style="font-size: 1.3em; margin-top: 20px;">
+                    Du hast alle Räume gemeistert und bist bereit für das neue Schuljahr! 
+                </p>
+                <p style="font-size: 1.1em; margin-top: 15px; color: #666;">
+                    Deine Programmierkenntnisse sind wieder aufgefrischt. Die Sommerferien waren toll, 
+                    aber jetzt wird's Zeit, wieder richtig durchzustarten! 💪
+                </p>
+                <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <h3 style="color: #28a745;">Deine Leistung:</h3>
+                    <p style="font-size: 1.2em; margin-top: 10px;">
+                        ✅ Sequenzen gemeistert<br>
+                        ✅ Variablen verstanden<br>
+                        ✅ Selektionen durchschaut<br>
+                        ✅ Bereit für neue Programmier-Abenteuer!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRoom = 1;
+        const totalRooms = 5;
+        let roomsCompleted = 0;
+
+        function updateProgress() {
+            const percentage = (roomsCompleted / totalRooms) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = Math.round(percentage) + '%';
+        }
+
+        function showHint(room) {
+            document.getElementById('hint' + room).style.display = 'block';
+        }
+
+        function checkAnswer(room, answer) {
+            let correct = false;
+            let feedbackText = '';
+            
+            switch(room) {
+                case 1:
+                    if (answer === 'C') {
+                        correct = true;
+                        feedbackText = '🎉 Richtig! Erst die Variablen definieren, dann verwenden!';
+                    } else {
+                        feedbackText = '❌ Nicht ganz. Denk daran: Variablen müssen existieren, bevor du sie in print() verwendest!';
+                    }
+                    break;
+                    
+                case 2:
+                    if (parseInt(answer) === 95) {
+                        correct = true;
+                        feedbackText = '🎉 Super! 15 + 20 + 20 + 40 = 95 Eis verkauft!';
+                    } else {
+                        feedbackText = '❌ Noch nicht richtig. Rechne nochmal nach: Mo(15) + Di(20) + Mi(20) + Do(40)';
+                    }
+                    break;
+                    
+                case 3:
+                    if (answer === 'B') {
+                        correct = true;
+                        feedbackText = '🎉 Perfekt! Bei 28°C Haut gibt\'s LSF 50!';
+                    } else {
+                        feedbackText = '❌ Schau nochmal genau auf die Bedingungen!';
+                    }
+                    break;
+                    
+                case 4:
+                    if (parseInt(answer) === 125) {
+                        correct = true;
+                        feedbackText = '🎉 Ausgezeichnet! (30+30+60+5) = 125 Punkte! Pizza ist gesichert! 🍕';
+                    } else {
+                        feedbackText = '❌ Fast! Denk dran: Alle Punkte addieren und mit dem entsprechenden Faktor multiplizieren!';
+                    }
+                    break;
+                    
+                case 5:
+                    if (answer === 'B') {
+                        correct = true;
+                        feedbackText = '🎉 Genau richtig! Wecker hat geklingelt, es ist früh genug, aber kein Frühstück!';
+                    } else {
+                        feedbackText = '❌ Schau dir die Bedingungen nochmal genau an!';
+                    }
+                    break;
+            }
+            
+            const feedbackEl = document.getElementById('feedback' + room);
+            feedbackEl.className = correct ? 'feedback correct' : 'feedback incorrect';
+            feedbackEl.textContent = feedbackText;
+            feedbackEl.style.display = 'block';
+            
+            if (correct) {
+                roomsCompleted++;
+                updateProgress();
+                
+                setTimeout(() => {
+                    if (room < totalRooms) {
+                        nextRoom();
+                    } else {
+                        showFinalRoom();
+                    }
+                }, 2000);
+            }
+        }
+        
+        function nextRoom() {
+            document.getElementById('room' + currentRoom).classList.remove('active');
+            currentRoom++;
+            document.getElementById('room' + currentRoom).classList.add('active');
+        }
+        
+        function showFinalRoom() {
+            document.getElementById('room' + currentRoom).classList.remove('active');
+            document.getElementById('finalRoom').classList.add('active');
+        }
+    </script>
+</body>
+</html>
